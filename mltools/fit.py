@@ -20,8 +20,8 @@ def get_cv(data, method, **params):
             if i in keys:
               i = param['i']
         
-        model = Weibull(data, a = a, b = b, loc = c)
-        cv = Weibull.get_cv()
+        model = Weibull(data, a = a, c = c, loc = loc)
+        cv = model.get_cv()
     
     return cv
 
@@ -32,26 +32,26 @@ class Weibull():
     X means the area under the Weibull curve from 0 to X
     """
 
-    def __init__(self, data, a=1, c=1, loc=0, cv=0.95):
+    def __init__(self, data, a=1, c=1, loc=0, cp=0.95):
         self.data = np.sort(data)
         self.a = a
         self.c = c 
         self.loc = loc
-        self.cv = cv
-        self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, self.loc)
+        self.cp = cp
+        self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.loc)
         self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.weibull_params)})
 
-    def get_params():
+    def get_params(self):
         return self.weibull_params
 
-    def get_cdf_data():
+    def get_cdf_data(self):
         return self.df_cdf
 
-    def get_cv():
+    def get_cv(self):
         """ cp means cumulative probability
         """
         df_cdf = self.df_cdf
         cp = self.cp
-        x = df_cdf[df_cdf['cdf'] > cp ]['data'].values
+        x = df_cdf.loc[(df_cdf['cdf'] > cp), "data"].values
         cv = x[0]
         return cv
