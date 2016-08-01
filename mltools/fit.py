@@ -6,24 +6,52 @@ import numpy as np
 from scipy import stats
 from numpy import linspace
 
+weibull = ['Weibull', 'weibull', 'wei']
+
+def get_cv(data, method, **params):
+    keys = params.keys()
+    cv = None
+
+    if method in weibull:
+        a, c , loc, cp = 1, 1, 0, 0.95
+        param = [a, c, loc, cp]
+        
+        for i in param:
+            if i in keys:
+              i = param['i']
+        
+        model = Weibull(data, a = a, b = b, loc = c)
+        cv = Weibull.get_cv()
+    
+    return cv
+
+
 class Weibull():
     """ Use Weibull distribution to fit the data
     and find the critical vaule of X.
     X means the area under the Weibull curve from 0 to X
     """
 
-    def __init__(self, data):
+    def __init__(self, data, a=1, c=1, loc=0, cv=0.95):
         self.data = np.sort(data)
+        self.a = a
+        self.c = c 
+        self.loc = loc
+        self.cv = cv
+        self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, self.loc)
+        self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.weibull_params)})
 
-    def get_params(data, a = 1, c = 1, loc = 1):
-        weibull_params = stats.exponweib.fit(data, a, c, loc)
-        return weibull_params
+    def get_params():
+        return self.weibull_params
 
-    def get_cdf_data(data, params):
-        df_cdf = pd.DataFrame({'data':data, 'cdf':stats.exponweib.cdf(data, *params)})
-        return df_cdf
+    def get_cdf_data():
+        return self.df_cdf
 
-    def get_critical_value(df_cdf, cv):
-        x = df_cdf[df_cdf['cdf'] > cv ]['data'].values
+    def get_cv():
+        """ cp means cumulative probability
+        """
+        df_cdf = self.df_cdf
+        cp = self.cp
+        x = df_cdf[df_cdf['cdf'] > cp ]['data'].values
         cv = x[0]
         return cv
