@@ -9,7 +9,9 @@ from numpy import linspace
 from mltools import fit 
 
 df = pd.read_csv('data/fit.csv', sep='\t', names=['data'])
+df = df.data
 
 
-def test_weibull_init():
-    pass
+def test_get_cv():
+    cv = fit.get_cv(df, 'Weibull')
+    print(cv)
