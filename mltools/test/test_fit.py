@@ -8,8 +8,7 @@ from scipy import stats
 from numpy import linspace
 from mltools import fit 
 
-df = pd.read_csv('data/fit.csv', sep='\t', names=['data'])
-df = df.data
+df = pd.read_csv('data/fit.csv', sep='\t')
 
 
 def test_get_cv():
