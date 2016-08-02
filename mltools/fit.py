@@ -18,18 +18,15 @@ def get_first_col(data):
 
 def get_cv(data, method, **params):
     data = get_first_col(data)
-    keys = params.keys()
     cv = None
 
     if method in weibull:
-        a, c , loc, cp = 1, 1, 0, 0.95
-        param = [a, c, loc, cp]
-        
-        for i in param:
-            if i in keys:
-              i = param['i']
-        
-        model = Weibull(data, a = a, c = c, loc = loc)
+        a, c, loc, cp = 1, 1, 0, 0.95
+        for key,val in params.items():
+            exec(key + '=val')
+     
+        print('%s,%s,%s,%s' % (a, c, loc, cp))       
+        model = Weibull(data, a = a, c = c, loc = loc, cp = cp)
         cv = model.get_cv()
     
     return cv
@@ -47,6 +44,7 @@ class Weibull():
         self.c = c 
         self.loc = loc
         self.cp = cp
+        print("%s,%s,%s,%s" % (a, c, loc, cp))
         self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.loc)
         self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.weibull_params)})
 
