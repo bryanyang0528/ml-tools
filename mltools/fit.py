@@ -8,7 +8,16 @@ from numpy import linspace
 
 weibull = ['Weibull', 'weibull', 'wei']
 
+
+def get_first_col(data):
+    if isinstance(data, pd.core.frame.DataFrame):
+        data = data[data.columns[0]]
+        return data
+    else:
+        raise TypeError('Please put a pandas Dataframe')
+
 def get_cv(data, method, **params):
+    data = get_first_col(data)
     keys = params.keys()
     cv = None
 
