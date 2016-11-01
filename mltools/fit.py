@@ -25,7 +25,6 @@ def get_cv(data, method, **params):
         for key,val in params.items():
             exec(key + '=val')
      
-        print('%s,%s,%s,%s' % (a, c, loc, cp))       
         model = Weibull(data, a = a, c = c, loc = loc, cp = cp)
         cv = model.get_cv()
     
@@ -44,7 +43,6 @@ class Weibull():
         self.c = c 
         self.loc = loc
         self.cp = cp
-        print("%s,%s,%s,%s" % (a, c, loc, cp))
         self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.loc)
         self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.weibull_params)})
 
