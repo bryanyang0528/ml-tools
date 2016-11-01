@@ -16,16 +16,12 @@ def get_first_col(data):
     else:
         raise TypeError('Please put a pandas Dataframe')
 
-def get_cv(data, method, **params):
+def get_cv(data, method, **kwds):
     data = get_first_col(data)
     cv = None
 
     if method in weibull:
-        a, c, loc, cp = 1, 1, 0, 0.95
-        for key,val in params.items():
-            exec(key + '=val')
-     
-        model = Weibull(data, a = a, c = c, loc = loc, cp = cp)
+        model = Weibull(data, **kwds)
         cv = model.get_cv()
     
     return cv
@@ -37,13 +33,13 @@ class Weibull():
     X means the area under the Weibull curve from 0 to X
     """
 
-    def __init__(self, data, a=1, c=1, loc=0, cp=0.95):
+    def __init__(self, data, **kwds):
         self.data = np.sort(data)
-        self.a = a
-        self.c = c 
-        self.loc = loc
-        self.cp = cp
-        self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.loc)
+        self.a = kwds.get('a', 1)
+        self.c = kwds.get('c', 1)
+        self.floc = kwds.get('floc', 0)
+        self.cp = kwds.get('cp', 0.95)
+        self.weibull_params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.floc)
         self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.weibull_params)})
 
     def get_params(self):
