@@ -22,9 +22,9 @@ def get_cv(data, method, **kwds):
 
     if method in weibull:
         model = Weibull(data, **kwds)
-        cv = model.get_cv()
+        cv,x = model.get_cv()
     
-    return cv
+    return cv,x
 
 
 class Weibull():
@@ -54,5 +54,8 @@ class Weibull():
         df_cdf = self.df_cdf
         cp = self.cp
         x = df_cdf.loc[(df_cdf['cdf'] > cp), "data"].values
-        cv = x[0]
-        return cv
+        if len(x) > 0:
+            cv = x[0]
+        else:
+            cv=self.data.max()
+        return cv, x
