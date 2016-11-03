@@ -22,9 +22,9 @@ def get_cv(data, method, **kwds):
 
     if method in weibull:
         model = Weibull(data, **kwds)
-        cv,x = model.get_cv()
+        cv = model.get_cv()
     
-    return cv,x
+    return cv
 
 
 class Weibull():
@@ -58,4 +58,4 @@ class Weibull():
             cv = x[0]
         else:
             cv=self.data.max()
-        return cv, x
+        return cv
