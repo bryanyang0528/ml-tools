@@ -43,3 +43,13 @@ class Weibull(distribution):
         self.params = stats.exponweib.fit(self.data, self.a, self.c, floc = self.floc)
         self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.exponweib.cdf(self.data, *self.params)})
 
+class Gaussian(distribution):
+    """ Use Gaussian(Norm) distribution to fit the data
+    and find the critical vaule of X.
+    X means the area under the Gaussian curve from 0 to X
+    """
+
+    def __init__(self, data, **kwds):
+        super(Gaussian, self).__init__(data, **kwds)
+        self.params = stats.norm.fit(self.data)
+        self.df_cdf = pd.DataFrame({'data':self.data, 'cdf':stats.norm.cdf(self.data, *self.params)})
