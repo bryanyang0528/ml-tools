@@ -2,12 +2,12 @@ import nose
 from nose.tools import assert_equal, assert_true
 
 import pandas as pd
-from mltools import fit 
+from mltools import fit
 
 df = pd.read_csv('data/fit.csv', sep='\t')
 
 
-def test_get_cv():
+def test_get_cv_wei():
     cv1 = fit.get_cv(df, 'Weibull')
     cv2 = fit.get_cv(df, 'weibull')
     cv3 = fit.get_cv(df, 'wei')
@@ -15,6 +15,12 @@ def test_get_cv():
     assert_equal(cv2, 1000)
     assert_equal(cv3, 1000)
 
-def test_get_cv_with_params():
+def test_get_cv_with_params_wei():
     cv1 = fit.get_cv(df, 'Weibull', cp =0.8)
     assert_equal(cv1, 900)
+
+def test_get_cv_norm():
+    pass
+
+def test_get_cv_with_param_norm():
+    pass
